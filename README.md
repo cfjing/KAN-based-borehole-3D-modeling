@@ -1,5 +1,5 @@
-# KAN-based-drill-hole-3D-modeling
-neural network model with KAN for sparse drill hole 3D interpolation modeling
+# KAN-based-borehole-3D-modeling
+neural network model with KAN for sparse borehole 3D interpolation modeling
 
 This software code is the official implementation for the article: **"A KAN-Based Dual-Branch Model for 3D Geological Modeling from Sparse Borehole Data Incorporating Geo-Environmental Constraints"**.Contains the workflows of the KAN model and the corresponding MLP model in the southern and northern rigions.
 
