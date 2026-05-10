@@ -16,40 +16,15 @@ class CustumModule(torch.nn.Module):
     def __init__(self, in_pos_channels=CONFIG.NUM_FEATURE_POS, in_fac_channels=CONFIG.NUM_FEATURE_FAC, output_channels=CONFIG.NUM_CLASSES):
         super(CustumModule, self).__init__()
         
-        torch.manual_seed(CONFIG.INITIAL_SEED)
         
-        CHANNEL = 64
-
-        self.pos_lin_1 = CustomLayers.KAN_Linear_Module.KAN_Linear(in_pos_channels, CHANNEL * 1)
-        self.pos_lin_2 = CustomLayers.KAN_Linear_Module.KAN_Linear(CHANNEL * 1, CHANNEL * 2)
-        self.pos_bn_1 = nn.LayerNorm(CHANNEL * 2)
-
-        self.fac_lin_1 = CustomLayers.KAN_Linear_Module.KAN_Linear(in_fac_channels, CHANNEL * 1)
-        self.fac_lin_2 = CustomLayers.KAN_Linear_Module.KAN_Linear(CHANNEL * 1, CHANNEL * 2)
-        self.fac_bn_1 = nn.LayerNorm(CHANNEL * 2)
-
-        self.out_lin_1 = CustomLayers.KAN_Linear_Module.KAN_Linear(CHANNEL * 4, CHANNEL * 2)
-        self.out_drop_1 = nn.Dropout(p=0.25)
-        self.out_lin_2 = CustomLayers.KAN_Linear_Module.KAN_Linear(CHANNEL * 2, CHANNEL * 1)
-        self.out_bn_1 = nn.LayerNorm(CHANNEL * 1)
-        self.out_lin_3 = nn.Linear(CHANNEL * 1, output_channels)
-  
+        
     def forward(self, x_pos, x_fac):
         
         x_pos = F.relu(self.pos_lin_1(x_pos))
-        x_pos = F.relu(self.pos_lin_2(x_pos))
-        x_pos = self.pos_bn_1(x_pos)
 
         x_fac = F.relu(self.fac_lin_1(x_fac))
-        x_fac = F.relu(self.fac_lin_2(x_fac))
-        x_fac = self.fac_bn_1(x_fac)
 
         x_merge = torch.concat((x_pos, x_fac), dim=-1)
-        x_merge = F.relu(self.out_lin_1(x_merge))
-        x_merge = self.out_drop_1(x_merge)
-        x_merge = F.relu(self.out_lin_2(x_merge))
-        x_merge = self.out_bn_1(x_merge)
-        x_merge = self.out_lin_3(x_merge)
         
         return x_merge
 
